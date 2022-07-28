@@ -1,4 +1,4 @@
-from .permissions import FullDjangoModelPermission, IsAdminOrReadOnly
+from .permissions import FullDjangoModelPermission, IsSuperUser
 from .filters import HexDataFilter
 from .models import HexData, Hypothesis, Profile
 from .serializers import HexDataSerializer, HypothesisCreateSerializer, HypothesisRetriveSerializer, HypothesisSerializer, ProfileSerializer
@@ -39,7 +39,7 @@ class HypothesisViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsSuperUser]
 
     @action(detail=False, methods=['GET', 'PUT'], permission_classes=[IsAuthenticated])
     def me(self, request):
