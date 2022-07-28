@@ -1,7 +1,7 @@
-from .permissions import IsAdminOrReadOnly
+from .permissions import FullDjangoModelPermission, IsAdminOrReadOnly
 from .filters import HexDataFilter
 from .models import HexData, Hypothesis, Profile
-from .serializers import HexDataSerializer, HypothesisCreateSerializer, HypothesisSerializer, ProfileSerializer
+from .serializers import HexDataSerializer, HypothesisCreateSerializer, HypothesisRetriveSerializer, HypothesisSerializer, ProfileSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -18,12 +18,12 @@ class HexDataViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = HexData.objects.all()
     search_fields = ['$source']
     ordering_fields = ['created_date']
-    permission_classes = [IsAuthenticated]
+    permission_classes = [FullDjangoModelPermission]
 
 
 class HypothesisViewSet(viewsets.ModelViewSet):
     queryset = Hypothesis.objects.select_related('user').all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [FullDjangoModelPermission]
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -31,6 +31,8 @@ class HypothesisViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PUT']:
             return HypothesisCreateSerializer
+        if self.action == 'retrieve':
+            return HypothesisRetriveSerializer
         return HypothesisSerializer
 
 

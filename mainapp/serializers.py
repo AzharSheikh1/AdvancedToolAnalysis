@@ -27,6 +27,14 @@ class HypothesisCreateSerializer(serializers.ModelSerializer):
         return hypothesis
 
 
+class HypothesisRetriveSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+
+    class Meta:
+        model = Hypothesis
+        fields = ['name', 'description', 'lat_long_field', 'user']
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(read_only=True)
 
